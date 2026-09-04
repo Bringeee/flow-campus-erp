@@ -28,13 +28,13 @@ import { DEPARTMENTS, attendancePct } from "@/lib/erp-data";
 export const Route = createFileRoute("/attendance")({
   head: () => ({
     meta: [
-      { title: "Attendance — CampusFlow ERP" },
+      { title: "Attendance — VTOP" },
       {
         name: "description",
         content:
           "Mark daily present/absent, auto-calculate attendance percentage and flag students below 75%.",
       },
-      { property: "og:title", content: "Attendance — CampusFlow ERP" },
+      { property: "og:title", content: "Attendance — VTOP" },
       {
         property: "og:description",
         content: "Daily attendance marking with instant percentage calculation.",

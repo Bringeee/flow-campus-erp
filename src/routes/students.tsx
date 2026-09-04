@@ -47,13 +47,13 @@ import {
 export const Route = createFileRoute("/students")({
   head: () => ({
     meta: [
-      { title: "Students — CampusFlow ERP" },
+      { title: "Students — VTOP" },
       {
         name: "description",
         content:
           "Search, add, edit and remove student records with attendance, fees and results at a glance.",
       },
-      { property: "og:title", content: "Students — CampusFlow ERP" },
+      { property: "og:title", content: "Students — VTOP" },
       { property: "og:description", content: "Complete student directory for your college." },
     ],
   }),

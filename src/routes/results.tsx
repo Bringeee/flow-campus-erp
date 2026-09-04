@@ -44,13 +44,13 @@ import {
 export const Route = createFileRoute("/results")({
   head: () => ({
     meta: [
-      { title: "Results — CampusFlow ERP" },
+      { title: "Results — VTOP" },
       {
         name: "description",
         content:
           "View subject marks, auto-calculated grades, percentage and Pass/Fail for every student.",
       },
-      { property: "og:title", content: "Results — CampusFlow ERP" },
+      { property: "og:title", content: "Results — VTOP" },
       {
         property: "og:description",
         content: "Subject marks, grade, percentage and Pass/Fail at a glance.",

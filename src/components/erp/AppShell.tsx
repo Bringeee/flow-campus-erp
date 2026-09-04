@@ -43,7 +43,7 @@ export function AppShell({
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-6 text-center">
         <GraduationCap className="size-10 text-primary" />
-        <p className="text-muted-foreground">Please sign in to access CampusFlow ERP.</p>
+        <p className="text-muted-foreground">Please sign in to access VTOP.</p>
         <Button onClick={() => navigate({ to: "/" })}>Go to login</Button>
       </div>
     );
@@ -52,7 +52,7 @@ export function AppShell({
   const items = NAV.filter((n) => (n.roles as readonly string[]).includes(user.role));
 
   return (
-    <div className="flex min-h-screen bg-muted/40">
+    <div className="app-surface flex min-h-screen">
       <aside
         className={cn(
           "fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-sidebar text-sidebar-foreground transition-transform lg:static lg:translate-x-0",
@@ -64,8 +64,8 @@ export function AppShell({
             <GraduationCap className="size-5" />
           </span>
           <div>
-            <p className="text-sm font-semibold tracking-tight">CampusFlow ERP</p>
-            <p className="text-[11px] text-sidebar-foreground/60">One Campus. One System.</p>
+            <p className="text-sm font-semibold tracking-tight">VTOP</p>
+            <p className="text-[11px] text-sidebar-foreground/60">VIT On Top</p>
           </div>
           <button className="ml-auto lg:hidden" onClick={() => setOpen(false)} aria-label="Close menu">
             <X className="size-5" />
@@ -114,7 +114,7 @@ export function AppShell({
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <header className="flex items-center gap-3 border-b bg-background px-4 py-4 sm:px-6">
+        <header className="flex items-center gap-3 border-b bg-transparent px-4 py-4 sm:px-6">
           <button className="lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu">
             <Menu className="size-5" />
           </button>

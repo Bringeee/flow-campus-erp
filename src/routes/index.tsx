@@ -1,26 +1,26 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ArrowLeft, GraduationCap, ShieldCheck, BookOpen, User } from "lucide-react";
+import { ArrowLeft, Eye, EyeOff, GraduationCap, ShieldCheck, BookOpen, User } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useErp } from "@/lib/erp-store";
-import type { Role } from "@/lib/erp-data";
+import { findStudentByLoginEmail, type Role } from "@/lib/erp-data";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Sign in — CampusFlow ERP" },
+      { title: "Sign in — VTOP" },
       {
         name: "description",
         content:
-          "Sign in to CampusFlow ERP to manage students, attendance, fees and results in one college system.",
+          "Sign in to VTOP to manage students, attendance, fees and results in one college system.",
       },
-      { property: "og:title", content: "Sign in — CampusFlow ERP" },
+      { property: "og:title", content: "Sign in — VTOP" },
       {
         property: "og:description",
-        content: "One Campus. One System. Complete Control.",
+        content: "VIT On Top. Complete Control.",
       },
     ],
   }),
@@ -52,16 +52,18 @@ const DEMOS: {
     role: "student",
     label: "Student",
     icon: User,
-    credentials: [{ email: "aarav.sharma@campusflow.edu.in", password: "student123" }],
+    // Students log in with <id>@np.in and their own ID as password — validated against records.
+    credentials: [],
   },
 ];
 
 function LoginPage() {
-  const { login } = useErp();
+  const { login, students } = useErp();
   const navigate = useNavigate();
   const [role, setRole] = useState<Role | null>(null);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   function signIn(r: Role, enteredEmail?: string) {
     login(r, enteredEmail);
@@ -78,9 +80,16 @@ function LoginPage() {
       return;
     }
     const selected = DEMOS.find((d) => d.role === role)!;
-    const ok = selected.credentials.some(
-      (c) => email.trim().toLowerCase() === c.email && password === c.password,
-    );
+    let ok = false;
+    if (role === "student") {
+      // Every student logs in with <id>@np.in and their own ID as the password.
+      const s = findStudentByLoginEmail(students, email);
+      ok = !!s && password === s.id;
+    } else {
+      ok = selected.credentials.some(
+        (c) => email.trim().toLowerCase() === c.email && password === c.password,
+      );
+    }
     if (!ok) {
       toast.error("Invalid credentials for this account");
       return;
@@ -92,22 +101,29 @@ function LoginPage() {
     setRole(r);
     setEmail("");
     setPassword("");
+    setShowPassword(false);
   }
 
   return (
     <div className="grid min-h-screen lg:grid-cols-2">
-      <section className="relative hidden flex-col justify-between bg-sidebar p-12 text-sidebar-foreground lg:flex">
-        <div className="flex items-center gap-3">
+      <section className="relative hidden flex-col bg-sidebar p-12 text-sidebar-foreground lg:flex">
+        <div className="flex animate-in items-center gap-3 fade-in zoom-in-95 fill-mode-both duration-700 ease-out motion-reduce:animate-none">
           <span className="grid size-10 place-items-center rounded-xl bg-sidebar-primary text-sidebar-primary-foreground">
             <GraduationCap className="size-5" />
           </span>
-          <span className="text-lg font-semibold">CampusFlow ERP</span>
+          <span className="text-lg font-semibold">VTOP</span>
         </div>
-        <div>
-          <h2 className="max-w-md text-4xl font-bold leading-tight tracking-tight">
-            One Campus. One System. Complete Control.
+        <div className="flex flex-1 flex-col justify-center">
+          <h2
+            className="max-w-md animate-in text-4xl font-bold leading-tight tracking-tight fade-in slide-in-from-bottom-3 fill-mode-both duration-700 ease-out motion-reduce:animate-none"
+            style={{ animationDelay: "150ms" }}
+          >
+            VIT On Top. Complete Control.
           </h2>
-          <p className="mt-4 max-w-md text-sidebar-foreground/70">
+          <p
+            className="mt-4 max-w-md animate-in text-sidebar-foreground/70 fade-in slide-in-from-bottom-2 fill-mode-both duration-700 ease-out motion-reduce:animate-none"
+            style={{ animationDelay: "300ms" }}
+          >
             Replace scattered Excel sheets with a single college system for student records,
             attendance, fees and results.
           </p>
@@ -116,41 +132,47 @@ function LoginPage() {
               ["50", "Students"],
               ["5", "Faculty"],
               ["4", "Departments"],
-            ].map(([n, l]) => (
-              <div key={l} className="rounded-xl bg-sidebar-accent/60 p-4">
+            ].map(([n, l], i) => (
+              <div
+                key={l}
+                className="animate-in rounded-xl bg-sidebar-accent/60 p-4 fade-in slide-in-from-bottom-2 fill-mode-both duration-600 ease-out transition-all hover:-translate-y-1 hover:bg-sidebar-accent hover:shadow-lg motion-reduce:animate-none motion-reduce:transition-none"
+                style={{ animationDelay: `${450 + i * 110}ms` }}
+              >
                 <p className="text-2xl font-semibold">{n}</p>
                 <p className="text-xs text-sidebar-foreground/70">{l}</p>
               </div>
             ))}
           </div>
         </div>
-        <p className="text-xs text-sidebar-foreground/50">
-          Demo data only — no real student records.
-        </p>
       </section>
 
-      <section className="flex items-center justify-center bg-background px-6 py-16">
+      <section className="login-surface flex items-center justify-center px-6 py-16">
         <div className="w-full max-w-sm">
-          <div className="mb-8 flex items-center gap-3 lg:hidden">
+          <div className="mb-8 flex animate-in items-center gap-3 fill-mode-both duration-500 fade-in slide-in-from-bottom-2 ease-out lg:hidden motion-reduce:animate-none">
             <span className="grid size-10 place-items-center rounded-xl bg-primary text-primary-foreground">
               <GraduationCap className="size-5" />
             </span>
-            <span className="text-lg font-semibold">CampusFlow ERP</span>
+            <span className="text-lg font-semibold">VTOP</span>
           </div>
 
           {role === null ? (
-            <>
+            <div
+              key="choose"
+              className="animate-in fade-in slide-in-from-bottom-2 fill-mode-both duration-300 ease-out motion-reduce:animate-none"
+              style={{ animationDelay: "250ms" }}
+            >
               <h1 className="text-2xl font-bold tracking-tight">Sign in</h1>
               <p className="mt-1 text-sm text-muted-foreground">
                 Select your authority to open the sign-in panel.
               </p>
 
               <div className="mt-8 grid gap-3">
-                {DEMOS.map((d) => (
+                {DEMOS.map((d, i) => (
                   <Button
                     key={d.role}
                     variant="outline"
-                    className="justify-start py-3"
+                    className="animate-in fade-in slide-in-from-bottom-1 fill-mode-both duration-500 ease-out justify-start py-3 motion-reduce:animate-none"
+                    style={{ animationDelay: `${500 + i * 100}ms` }}
                     onClick={() => selectRole(d.role)}
                   >
                     <d.icon className="size-4 text-primary" />
@@ -158,9 +180,12 @@ function LoginPage() {
                   </Button>
                 ))}
               </div>
-            </>
+            </div>
           ) : (
-            <form onSubmit={onSubmit} className="space-y-5">
+            <form
+              onSubmit={onSubmit}
+              className="animate-in fade-in zoom-in-95 slide-in-from-bottom-2 space-y-5 duration-300 ease-out motion-reduce:animate-none"
+            >
               <button
                 type="button"
                 onClick={() => setRole(null)}
@@ -199,12 +224,24 @@ function LoginPage() {
               </div>
               <div className="space-y-2">
                 <Label htmlFor="password">Password</Label>
-                <Input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                />
+                <div className="relative">
+                  <Input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    className="pr-10"
+                  />
+                  <button
+                    type="button"
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    title={showPassword ? "Hide password" : "Show password"}
+                    className="absolute inset-y-0 right-0 grid w-10 place-items-center text-muted-foreground transition-colors hover:text-foreground"
+                    onClick={() => setShowPassword((visible) => !visible)}
+                  >
+                    {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
+                  </button>
+                </div>
               </div>
 
               <div className="flex gap-2">
@@ -216,20 +253,6 @@ function LoginPage() {
                 </Button>
               </div>
 
-              {(() => {
-                const d = DEMOS.find((x) => x.role === role)!;
-                return (
-                  <div className="text-xs text-muted-foreground">
-                    {d.credentials.map((c) => (
-                      <p key={c.email} className="leading-relaxed">
-                        {c.email}
-                        <br />
-                        Password: {c.password}
-                      </p>
-                    ))}
-                  </div>
-                );
-              })()}
             </form>
           )}
         </div>

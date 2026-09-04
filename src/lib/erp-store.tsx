@@ -2,7 +2,9 @@ import { createContext, useContext, useMemo, useState, type ReactNode } from "re
 import {
   FACULTY,
   facultyDepartments,
+  findStudentByLoginEmail,
   generateStudents,
+  studentLoginEmail,
   type Department,
   type Faculty,
   type Role,
@@ -54,8 +56,8 @@ export function ErpProvider({ children }: { children: ReactNode }) {
             ...(deps ? { departments: deps } : {}),
           });
         } else {
-          const s = students[0]!;
-          setUser({ role, name: s.name, email: s.email, studentId: s.id });
+          const s = (email ? findStudentByLoginEmail(students, email) : undefined) ?? students[0]!;
+          setUser({ role, name: s.name, email: studentLoginEmail(s.id), studentId: s.id });
         }
       },
       logout: () => setUser(null),

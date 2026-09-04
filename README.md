@@ -1,6 +1,6 @@
-# Build a simple but fully functional College ERP MVP called CampusFlow ERP
+# Build a simple but fully functional College ERP MVP called VTOP
 
-Build a **simple but fully functional College ERP MVP** called **CampusFlow ERP**.
+Build a **simple but fully functional College ERP MVP** called **VTOP**.
 
 The goal is to solve the problem of colleges managing student records, attendance, fees and results in separate Excel sheets.
 
@@ -156,11 +156,11 @@ Make it look like a professional modern college ERP:
 
 Use the name:
 
-**CampusFlow ERP**
+**VTOP**
 
 Tagline:
 
-**One Campus. One System. Complete Control.**
+**VIT On Top. Complete Control.**
 
 ### IMPORTANT
 

@@ -28,13 +28,13 @@ import { DEPARTMENTS, feeDue, feeStatus, inr, type FeeStatus, type Student } fro
 export const Route = createFileRoute("/fees")({
   head: () => ({
     meta: [
-      { title: "Fees — CampusFlow ERP" },
+      { title: "Fees — VTOP" },
       {
         name: "description",
         content:
           "Track total fees, payments, remaining dues and Paid/Pending status for every student.",
       },
-      { property: "og:title", content: "Fees — CampusFlow ERP" },
+      { property: "og:title", content: "Fees — VTOP" },
       { property: "og:description", content: "Total fee, paid, remaining and status at a glance." },
     ],
   }),

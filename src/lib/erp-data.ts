@@ -177,7 +177,7 @@ export function generateStudents(): Student[] {
     students.push({
       id: `CF${String(2026000 + i + 1)}`,
       name,
-      email: `${name.toLowerCase().replace(/\s+/g, ".")}${i}@campusflow.edu.in`,
+      email: `CF${String(2026000 + i + 1)}@np.in`,
       phone: `+91 9${String(Math.floor(rand() * 900000000) + 100000000)}`,
       department,
       course: COURSE_BY_DEPT[department],
@@ -190,6 +190,17 @@ export function generateStudents(): Student[] {
     });
   }
   return students;
+}
+
+/** Login email for a student — `<id>@np.in`. */
+export function studentLoginEmail(id: string): string {
+  return `${id.toLowerCase()}@np.in`;
+}
+
+/** Find a student by their login email (`<id>@np.in`, case-insensitive). */
+export function findStudentByLoginEmail(students: Student[], email: string): Student | undefined {
+  const e = email.trim().toLowerCase();
+  return students.find((s) => studentLoginEmail(s.id) === e);
 }
 
 export const FACULTY: Faculty[] = [

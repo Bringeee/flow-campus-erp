@@ -31,8 +31,8 @@ export function printPdf(title: string, headers: string[], rows: (string | numbe
     th,td{border:1px solid #e2e8f0;padding:6px 8px;text-align:left}
     th{background:#f1f5f9}
   </style></head><body>
-  <h1>CampusFlow ERP — ${title}</h1>
-  <p>One Campus. One System. Complete Control. · Generated ${new Date().toLocaleString("en-IN")}</p>
+  <h1>VTOP — ${title}</h1>
+  <p>VIT On Top. Complete Control. · Generated ${new Date().toLocaleString("en-IN")}</p>
   <table><thead><tr>${headers.map((h) => `<th>${h}</th>`).join("")}</tr></thead>
   <tbody>${rows.map((r) => `<tr>${r.map((c) => `<td>${c}</td>`).join("")}</tr>`).join("")}</tbody></table>
   </body></html>`);

@@ -26,13 +26,13 @@ import {
 export const Route = createFileRoute("/reports")({
   head: () => ({
     meta: [
-      { title: "Reports — CampusFlow ERP" },
+      { title: "Reports — VTOP" },
       {
         name: "description",
         content:
           "Export student, attendance, fees and results data to Excel, or generate a printable PDF report.",
       },
-      { property: "og:title", content: "Reports — CampusFlow ERP" },
+      { property: "og:title", content: "Reports — VTOP" },
       { property: "og:description", content: "Excel and PDF exports for your whole campus." },
     ],
   }),

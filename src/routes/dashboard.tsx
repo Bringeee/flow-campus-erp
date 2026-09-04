@@ -32,13 +32,13 @@ import {
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Dashboard — CampusFlow ERP" },
+      { title: "Dashboard — VTOP" },
       {
         name: "description",
         content:
           "College dashboard with student count, attendance, pending fees and pass percentage.",
       },
-      { property: "og:title", content: "Dashboard — CampusFlow ERP" },
+      { property: "og:title", content: "Dashboard — VTOP" },
       {
         property: "og:description",
         content: "Live college metrics across attendance, fees and results.",
@@ -159,7 +159,7 @@ function DashboardPage() {
   return (
     <AppShell
       title={user?.role === "faculty" ? "Faculty Dashboard" : "Admin Dashboard"}
-      subtitle="One Campus. One System. Complete Control."
+      subtitle="VIT On Top. Complete Control."
     >
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         <StatCard
