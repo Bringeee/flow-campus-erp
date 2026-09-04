@@ -50,7 +50,8 @@ export const Route = createFileRoute("/students")({
       { title: "Students — CampusFlow ERP" },
       {
         name: "description",
-        content: "Search, add, edit and remove student records with attendance, fees and results at a glance.",
+        content:
+          "Search, add, edit and remove student records with attendance, fees and results at a glance.",
       },
       { property: "og:title", content: "Students — CampusFlow ERP" },
       { property: "og:description", content: "Complete student directory for your college." },
@@ -90,18 +91,24 @@ function StudentsPage() {
   const [form, setForm] = useState<FormState>(emptyForm);
 
   const canEdit = user?.role === "admin";
+  const visibleDepts = user?.departments ?? DEPARTMENTS;
+  const scopedTotal = user?.departments
+    ? students.filter((s) => user.departments!.includes(s.department)).length
+    : students.length;
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
+    const scope = user?.departments;
     return students.filter(
       (s) =>
+        (!scope || scope.includes(s.department)) &&
         (dept === "all" || s.department === dept) &&
         (!q ||
           s.name.toLowerCase().includes(q) ||
           s.id.toLowerCase().includes(q) ||
           s.course.toLowerCase().includes(q)),
     );
-  }, [students, query, dept]);
+  }, [students, query, dept, user?.departments]);
 
   function openAdd() {
     setEditing(null);
@@ -156,7 +163,7 @@ function StudentsPage() {
   }
 
   return (
-    <AppShell title="Students" subtitle={`${filtered.length} of ${students.length} records`}>
+    <AppShell title="Students" subtitle={`${filtered.length} of ${scopedTotal} records`}>
       <Card>
         <CardContent className="flex flex-wrap items-center gap-3 pt-6">
           <div className="relative min-w-56 flex-1">
@@ -174,7 +181,7 @@ function StudentsPage() {
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">All departments</SelectItem>
-              {DEPARTMENTS.map((d) => (
+              {visibleDepts.map((d) => (
                 <SelectItem key={d} value={d}>
                   {d}
                 </SelectItem>
@@ -231,7 +238,12 @@ function StudentsPage() {
                     </TableCell>
                     {canEdit && (
                       <TableCell className="text-right">
-                        <Button variant="ghost" size="icon" onClick={() => openEdit(s)} aria-label="Edit">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => openEdit(s)}
+                          aria-label="Edit"
+                        >
                           <Pencil className="size-4" />
                         </Button>
                         <Button
@@ -269,13 +281,22 @@ function StudentsPage() {
           </DialogHeader>
           <div className="grid gap-4 sm:grid-cols-2">
             <Field label="Full name">
-              <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+              <Input
+                value={form.name}
+                onChange={(e) => setForm({ ...form, name: e.target.value })}
+              />
             </Field>
             <Field label="Email">
-              <Input value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+              <Input
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              />
             </Field>
             <Field label="Phone">
-              <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+              <Input
+                value={form.phone}
+                onChange={(e) => setForm({ ...form, phone: e.target.value })}
+              />
             </Field>
             <Field label="Department">
               <Select
@@ -295,7 +316,10 @@ function StudentsPage() {
               </Select>
             </Field>
             <Field label="Semester">
-              <Select value={form.semester} onValueChange={(v) => setForm({ ...form, semester: v })}>
+              <Select
+                value={form.semester}
+                onValueChange={(v) => setForm({ ...form, semester: v })}
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>

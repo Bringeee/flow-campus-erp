@@ -31,10 +31,14 @@ export const Route = createFileRoute("/attendance")({
       { title: "Attendance — CampusFlow ERP" },
       {
         name: "description",
-        content: "Mark daily present/absent, auto-calculate attendance percentage and flag students below 75%.",
+        content:
+          "Mark daily present/absent, auto-calculate attendance percentage and flag students below 75%.",
       },
       { property: "og:title", content: "Attendance — CampusFlow ERP" },
-      { property: "og:description", content: "Daily attendance marking with instant percentage calculation." },
+      {
+        property: "og:description",
+        content: "Daily attendance marking with instant percentage calculation.",
+      },
     ],
   }),
   component: AttendancePage,
@@ -42,17 +46,23 @@ export const Route = createFileRoute("/attendance")({
 
 function AttendancePage() {
   const { students, user, markAttendance } = useErp();
-  const [dept, setDept] = useState<string>(DEPARTMENTS[0]);
+  const scope = user?.departments;
+  const visibleDepts = scope ?? DEPARTMENTS;
+  const [dept, setDept] = useState<string>(visibleDepts[0]);
   const [query, setQuery] = useState("");
   const [marks, setMarks] = useState<Record<string, boolean>>({});
 
   const isStudent = user?.role === "student";
   const me = students.find((s) => s.id === user?.studentId);
 
+  const scopedStudents = scope ? students.filter((s) => scope.includes(s.department)) : students;
+
   const list = useMemo(() => {
     const q = query.trim().toLowerCase();
-    return students.filter((s) => s.department === dept && (!q || s.name.toLowerCase().includes(q)));
-  }, [students, dept, query]);
+    return scopedStudents.filter(
+      (s) => s.department === dept && (!q || s.name.toLowerCase().includes(q)),
+    );
+  }, [scopedStudents, dept, query]);
 
   if (isStudent && me) {
     const pct = attendancePct(me);
@@ -90,7 +100,7 @@ function AttendancePage() {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              {DEPARTMENTS.map((d) => (
+              {visibleDepts.map((d) => (
                 <SelectItem key={d} value={d}>
                   {d}
                 </SelectItem>

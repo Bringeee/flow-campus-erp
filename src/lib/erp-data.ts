@@ -25,12 +25,7 @@ export type Faculty = {
   subject: string;
 };
 
-export const DEPARTMENTS = [
-  "Computer Science",
-  "Mechanical",
-  "Electronics",
-  "Commerce",
-] as const;
+export const DEPARTMENTS = ["Computer Science", "Mechanical", "Electronics", "Commerce"] as const;
 export type Department = (typeof DEPARTMENTS)[number];
 
 const COURSE_BY_DEPT: Record<Department, string> = {
@@ -41,20 +36,83 @@ const COURSE_BY_DEPT: Record<Department, string> = {
 };
 
 const SUBJECTS_BY_DEPT: Record<Department, string[]> = {
-  "Computer Science": ["Data Structures", "DBMS", "Operating Systems", "Mathematics III", "Web Technologies"],
-  Mechanical: ["Thermodynamics", "Fluid Mechanics", "Machine Design", "Mathematics III", "Manufacturing"],
-  Electronics: ["Digital Circuits", "Signals & Systems", "Microprocessors", "Mathematics III", "Communication"],
+  "Computer Science": [
+    "Data Structures",
+    "DBMS",
+    "Operating Systems",
+    "Mathematics III",
+    "Web Technologies",
+  ],
+  Mechanical: [
+    "Thermodynamics",
+    "Fluid Mechanics",
+    "Machine Design",
+    "Mathematics III",
+    "Manufacturing",
+  ],
+  Electronics: [
+    "Digital Circuits",
+    "Signals & Systems",
+    "Microprocessors",
+    "Mathematics III",
+    "Communication",
+  ],
   Commerce: ["Financial Accounting", "Business Law", "Economics", "Statistics", "Taxation"],
 };
 
 const FIRST = [
-  "Aarav","Vivaan","Aditya","Ishaan","Kabir","Rohan","Arjun","Karthik","Rahul","Siddharth",
-  "Ananya","Diya","Isha","Meera","Priya","Sneha","Kavya","Riya","Nisha","Pooja",
-  "Manish","Nikhil","Varun","Yash","Harsh","Tanvi","Shreya","Neha","Divya","Aisha",
+  "Aarav",
+  "Vivaan",
+  "Aditya",
+  "Ishaan",
+  "Kabir",
+  "Rohan",
+  "Arjun",
+  "Karthik",
+  "Rahul",
+  "Siddharth",
+  "Ananya",
+  "Diya",
+  "Isha",
+  "Meera",
+  "Priya",
+  "Sneha",
+  "Kavya",
+  "Riya",
+  "Nisha",
+  "Pooja",
+  "Manish",
+  "Nikhil",
+  "Varun",
+  "Yash",
+  "Harsh",
+  "Tanvi",
+  "Shreya",
+  "Neha",
+  "Divya",
+  "Aisha",
 ];
 const LAST = [
-  "Sharma","Verma","Patel","Reddy","Nair","Iyer","Gupta","Singh","Chauhan","Joshi",
-  "Mehta","Desai","Kulkarni","Rao","Bose","Chopra","Malhotra","Pillai","Banerjee","Kaur",
+  "Sharma",
+  "Verma",
+  "Patel",
+  "Reddy",
+  "Nair",
+  "Iyer",
+  "Gupta",
+  "Singh",
+  "Chauhan",
+  "Joshi",
+  "Mehta",
+  "Desai",
+  "Kulkarni",
+  "Rao",
+  "Bose",
+  "Chopra",
+  "Malhotra",
+  "Pillai",
+  "Banerjee",
+  "Kaur",
 ];
 
 /** Deterministic PRNG so server and client render identical data. */
@@ -89,6 +147,12 @@ export function attendancePct(s: Student): number {
 
 export function feeDue(s: Student): number {
   return Math.max(0, s.feeTotal - s.feePaid);
+}
+
+export type FeeStatus = "Paid" | "Pending";
+
+export function feeStatus(s: Pick<Student, "feeTotal" | "feePaid">): FeeStatus {
+  return s.feePaid >= s.feeTotal ? "Paid" : "Pending";
 }
 
 export function isPass(s: Student): boolean {
@@ -129,12 +193,73 @@ export function generateStudents(): Student[] {
 }
 
 export const FACULTY: Faculty[] = [
-  { id: "FAC01", name: "Dr. Ramesh Iyer", email: "ramesh.iyer@campusflow.edu.in", department: "Computer Science", subject: "Data Structures" },
-  { id: "FAC02", name: "Prof. Sunita Deshmukh", email: "sunita.d@campusflow.edu.in", department: "Mechanical", subject: "Thermodynamics" },
-  { id: "FAC03", name: "Dr. Anil Kapoor", email: "anil.kapoor@campusflow.edu.in", department: "Electronics", subject: "Microprocessors" },
-  { id: "FAC04", name: "Prof. Meenakshi Rao", email: "meenakshi.rao@campusflow.edu.in", department: "Commerce", subject: "Taxation" },
-  { id: "FAC05", name: "Dr. Vikram Bhatt", email: "vikram.bhatt@campusflow.edu.in", department: "Computer Science", subject: "DBMS" },
+  {
+    id: "FAC01",
+    name: "Dr. Ramesh Iyer",
+    email: "ramesh.iyer@campusflow.edu.in",
+    department: "Computer Science",
+    subject: "Data Structures",
+  },
+  {
+    id: "FAC02",
+    name: "Prof. Sunita Deshmukh",
+    email: "sunita.d@campusflow.edu.in",
+    department: "Mechanical",
+    subject: "Thermodynamics",
+  },
+  {
+    id: "FAC03",
+    name: "Dr. Anil Kapoor",
+    email: "anil.kapoor@campusflow.edu.in",
+    department: "Electronics",
+    subject: "Microprocessors",
+  },
+  {
+    id: "FAC04",
+    name: "Prof. Meenakshi Rao",
+    email: "meenakshi.rao@campusflow.edu.in",
+    department: "Commerce",
+    subject: "Taxation",
+  },
+  {
+    id: "FAC05",
+    name: "Dr. Vikram Bhatt",
+    email: "vikram.bhatt@campusflow.edu.in",
+    department: "Computer Science",
+    subject: "DBMS",
+  },
+  {
+    id: "FAC06",
+    name: "Ravi Singh",
+    email: "ravisingh@np.in",
+    department: "Commerce",
+    subject: "Economics",
+  },
+  {
+    id: "FAC07",
+    name: "Nikunj Rathi",
+    email: "nikunjrathi@np.in",
+    department: "Computer Science",
+    subject: "Web Technologies",
+  },
 ];
+
+/**
+ * Visible department scope for a faculty member by email.
+ * Returns `undefined` for full (all-department) access — e.g. admin.
+ */
+export function facultyDepartments(email: string): Department[] | undefined {
+  const scope: Record<string, Department[]> = {
+    "nikunjrathi@np.in": ["Computer Science", "Electronics"],
+    "ravisingh@np.in": ["Commerce", "Mechanical"],
+  };
+  return scope[email];
+}
+
+export function facultyCanView(email: string, department: Department): boolean {
+  const deps = facultyDepartments(email);
+  return !deps || deps.includes(department);
+}
 
 export const SUBJECTS_FOR = (d: Department) => SUBJECTS_BY_DEPT[d];
 export const COURSE_FOR = (d: Department) => COURSE_BY_DEPT[d];

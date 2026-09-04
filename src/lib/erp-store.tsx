@@ -1,7 +1,9 @@
 import { createContext, useContext, useMemo, useState, type ReactNode } from "react";
 import {
   FACULTY,
+  facultyDepartments,
   generateStudents,
+  type Department,
   type Faculty,
   type Role,
   type Student,
@@ -12,11 +14,13 @@ export type SessionUser = {
   name: string;
   email: string;
   studentId?: string;
+  /** Department scope for faculty members with restricted access. */
+  departments?: Department[];
 };
 
 type ErpContextValue = {
   user: SessionUser | null;
-  login: (role: Role) => void;
+  login: (role: Role, email?: string) => void;
   logout: () => void;
   students: Student[];
   faculty: Faculty[];
@@ -37,11 +41,18 @@ export function ErpProvider({ children }: { children: ReactNode }) {
       user,
       students,
       faculty: FACULTY,
-      login: (role) => {
+      login: (role, email) => {
         if (role === "admin") {
           setUser({ role, name: "Dr. Neelam Saxena", email: "admin@campusflow.edu.in" });
         } else if (role === "faculty") {
-          setUser({ role, name: FACULTY[0]!.name, email: FACULTY[0]!.email });
+          const f = FACULTY.find((x) => x.email === email) ?? FACULTY[0]!;
+          const deps = facultyDepartments(f.email);
+          setUser({
+            role,
+            name: f.name,
+            email: f.email,
+            ...(deps ? { departments: deps } : {}),
+          });
         } else {
           const s = students[0]!;
           setUser({ role, name: s.name, email: s.email, studentId: s.id });
