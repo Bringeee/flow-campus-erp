@@ -7,8 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useErp } from "@/lib/erp-store";
 import { findStudentByLoginEmail, type Role } from "@/lib/erp-data";
-import { signInWithSupabase } from "@/lib/auth-repository";
-import { isSupabaseConfigured } from "@/lib/supabase";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -74,7 +72,7 @@ function LoginPage() {
     navigate({ to: "/dashboard" });
   }
 
-  async function onSubmit(e: React.FormEvent) {
+  function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!role) return;
     if (!email.trim() || !password) {
@@ -82,16 +80,6 @@ function LoginPage() {
       return;
     }
     const normalizedEmail = email.trim().toLowerCase();
-
-    if (isSupabaseConfigured) {
-      try {
-        await signInWithSupabase(normalizedEmail, password, role);
-        signIn(role, normalizedEmail);
-      } catch (error) {
-        toast.error(error instanceof Error ? error.message : "Unable to sign in");
-      }
-      return;
-    }
 
     const selected = DEMOS.find((d) => d.role === role)!;
     const ok =
