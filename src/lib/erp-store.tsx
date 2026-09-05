@@ -10,6 +10,8 @@ import {
   type Role,
   type Student,
 } from "./erp-data";
+import { supabase } from "./supabase";
+import { loadStudentsWithSavedAttendance, saveAttendanceSnapshot } from "./attendance-storage";
 
 export type SessionUser = {
   role: Role;
@@ -35,7 +37,9 @@ type ErpContextValue = {
 const ErpContext = createContext<ErpContextValue | null>(null);
 
 export function ErpProvider({ children }: { children: ReactNode }) {
-  const [students, setStudents] = useState<Student[]>(() => generateStudents());
+  const [students, setStudents] = useState<Student[]>(() =>
+    loadStudentsWithSavedAttendance(generateStudents()),
+  );
   const [user, setUser] = useState<SessionUser | null>(null);
 
   const value = useMemo<ErpContextValue>(
@@ -60,14 +64,17 @@ export function ErpProvider({ children }: { children: ReactNode }) {
           setUser({ role, name: s.name, email: studentLoginEmail(s.id), studentId: s.id });
         }
       },
-      logout: () => setUser(null),
+      logout: () => {
+        void supabase?.auth.signOut();
+        setUser(null);
+      },
       addStudent: (s) => setStudents((prev) => [s, ...prev]),
       updateStudent: (id, patch) =>
         setStudents((prev) => prev.map((s) => (s.id === id ? { ...s, ...patch } : s))),
       deleteStudent: (id) => setStudents((prev) => prev.filter((s) => s.id !== id)),
       markAttendance: (marks) =>
-        setStudents((prev) =>
-          prev.map((s) =>
+        setStudents((prev) => {
+          const updated = prev.map((s) =>
             s.id in marks
               ? {
                   ...s,
@@ -75,8 +82,10 @@ export function ErpProvider({ children }: { children: ReactNode }) {
                   present: s.present + (marks[s.id] ? 1 : 0),
                 }
               : s,
-          ),
-        ),
+          );
+          saveAttendanceSnapshot(updated);
+          return updated;
+        }),
     }),
     [user, students],
   );

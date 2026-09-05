@@ -55,7 +55,7 @@ export function AppShell({
     <div className="app-surface flex min-h-screen">
       <aside
         className={cn(
-          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-sidebar text-sidebar-foreground transition-transform lg:static lg:translate-x-0",
+          "fixed inset-y-0 left-0 z-40 flex w-64 flex-col bg-sidebar text-sidebar-foreground shadow-2xl transition-transform",
           open ? "translate-x-0" : "-translate-x-full",
         )}
       >
@@ -67,7 +67,7 @@ export function AppShell({
             <p className="text-sm font-semibold tracking-tight">VTOP</p>
             <p className="text-[11px] text-sidebar-foreground/60">VIT On Top</p>
           </div>
-          <button className="ml-auto lg:hidden" onClick={() => setOpen(false)} aria-label="Close menu">
+          <button className="ml-auto" onClick={() => setOpen(false)} aria-label="Close menu">
             <X className="size-5" />
           </button>
         </div>
@@ -110,12 +110,17 @@ export function AppShell({
       </aside>
 
       {open && (
-        <div className="fixed inset-0 z-30 bg-foreground/40 lg:hidden" onClick={() => setOpen(false)} />
+        <div className="fixed inset-0 z-30 bg-foreground/40" onClick={() => setOpen(false)} />
       )}
 
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center gap-3 border-b bg-transparent px-4 py-4 sm:px-6">
-          <button className="lg:hidden" onClick={() => setOpen(true)} aria-label="Open menu">
+          <button
+            className="grid size-9 shrink-0 place-items-center rounded-lg border border-border/70 bg-background/60 transition-colors hover:bg-accent"
+            onClick={() => setOpen(true)}
+            aria-label="Open navigation menu"
+            title="Open navigation menu"
+          >
             <Menu className="size-5" />
           </button>
           <div className="min-w-0">

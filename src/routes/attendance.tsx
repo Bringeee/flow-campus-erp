@@ -24,6 +24,7 @@ import {
 } from "@/components/ui/table";
 import { useErp } from "@/lib/erp-store";
 import { DEPARTMENTS, attendancePct } from "@/lib/erp-data";
+import { saveAttendanceMarks } from "@/lib/attendance-repository";
 
 export const Route = createFileRoute("/attendance")({
   head: () => ({
@@ -122,9 +123,22 @@ function AttendancePage() {
           <Button
             className="ml-auto"
             disabled={marked === 0}
-            onClick={() => {
+            onClick={async () => {
+              const markList = Object.entries(marks).map(([studentId, present]) => ({
+                studentId,
+                present,
+              }));
               markAttendance(marks);
-              toast.success(`Attendance saved for ${marked} student${marked === 1 ? "" : "s"}`);
+              try {
+                const result = await saveAttendanceMarks(markList);
+                toast.success(
+                  result.persisted
+                    ? `Attendance saved for ${marked} student${marked === 1 ? "" : "s"}`
+                    : "Attendance saved locally. Supabase auth is not connected yet.",
+                );
+              } catch {
+                toast.error("Attendance saved locally, but Supabase could not be updated.");
+              }
               setMarks({});
             }}
           >

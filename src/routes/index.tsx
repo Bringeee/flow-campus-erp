@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useErp } from "@/lib/erp-store";
 import { findStudentByLoginEmail, type Role } from "@/lib/erp-data";
+import { signInWithSupabase } from "@/lib/auth-repository";
+import { isSupabaseConfigured } from "@/lib/supabase";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -72,29 +74,35 @@ function LoginPage() {
     navigate({ to: "/dashboard" });
   }
 
-  function onSubmit(e: React.FormEvent) {
+  async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!role) return;
     if (!email.trim() || !password) {
       toast.error("Enter your email and password");
       return;
     }
-    const selected = DEMOS.find((d) => d.role === role)!;
-    let ok = false;
-    if (role === "student") {
-      // Every student logs in with <id>@np.in and their own ID as the password.
-      const s = findStudentByLoginEmail(students, email);
-      ok = !!s && password === s.id;
-    } else {
-      ok = selected.credentials.some(
-        (c) => email.trim().toLowerCase() === c.email && password === c.password,
-      );
-    }
-    if (!ok) {
-      toast.error("Invalid credentials for this account");
+    const normalizedEmail = email.trim().toLowerCase();
+
+    if (isSupabaseConfigured) {
+      try {
+        await signInWithSupabase(normalizedEmail, password, role);
+        signIn(role, normalizedEmail);
+      } catch (error) {
+        toast.error(error instanceof Error ? error.message : "Unable to sign in");
+      }
       return;
     }
-    signIn(role, email.trim());
+
+    const selected = DEMOS.find((d) => d.role === role)!;
+    const ok =
+      role === "student"
+        ? (() => {
+            const s = findStudentByLoginEmail(students, normalizedEmail);
+            return !!s && password === s.id;
+          })()
+        : selected.credentials.some((c) => normalizedEmail === c.email && password === c.password);
+    if (!ok) toast.error("Invalid credentials for this account");
+    else signIn(role, normalizedEmail);
   }
 
   function selectRole(r: Role) {
